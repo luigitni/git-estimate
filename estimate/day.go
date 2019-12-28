@@ -4,8 +4,6 @@ import (
 	"time"
 )
 
-const LogFmt = "2 Jan 2006 15:04:05"
-
 type DayEstimate struct {}
 
 func (d DayEstimate) Estimate(byAuthors map[string][]time.Time) []Result {
@@ -19,15 +17,15 @@ func (d DayEstimate) Estimate(byAuthors map[string][]time.Time) []Result {
 		for _, t := range v {
 			if prev.IsZero() {
 				prev = t
-				r.Hours += 1.0
+				r.Days += 1.0
 				continue
 			}
 			if prev.YearDay() != t.YearDay() {
-				r.Hours += 1.0
+				r.Days += 1.0
 			}
 			prev = t
 		}
-		r.Days = r.Hours / 8.0
+		r.Hours = r.Days * 8.0
 		c++
 	}
 	return results
