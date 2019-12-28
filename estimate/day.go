@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type DayEstimate struct {}
+type DayEstimate struct{}
 
 func (d DayEstimate) Estimate(byAuthors map[string][]time.Time) []Result {
 	results := make([]Result, len(byAuthors))

@@ -3,14 +3,15 @@ package estimate
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 )
 
 type Result struct {
-	Author string `json:"author"`
-	Hours float64 `json:"hours"`
-	Days float64 `json:"days"`
+	Author string  `json:"author"`
+	Hours  float64 `json:"hours"`
+	Days   float64 `json:"days"`
 }
 
 type Estimate interface {
@@ -22,7 +23,7 @@ type Formatter interface {
 }
 
 // Format the result as a JSON object
-type JSONFormatter struct {}
+type JSONFormatter struct{}
 
 func (f JSONFormatter) String(results []Result) string {
 	total := Result{Author: "all"}
@@ -33,7 +34,7 @@ func (f JSONFormatter) String(results []Result) string {
 
 	res := struct {
 		Developers []Result `json:"developers"`
-		Overall Result `json:"overall"`
+		Overall    Result   `json:"overall"`
 	}{
 		results,
 		total,
@@ -41,12 +42,13 @@ func (f JSONFormatter) String(results []Result) string {
 
 	b, err := json.Marshal(res)
 	if err != nil {
-		panic(err)
+		fmt.Printf("error marshaling result: %s", err.Error())
+		os.Exit(1)
 	}
 	return string(b)
 }
 
-type StringFormatter struct {}
+type StringFormatter struct{}
 
 func (f StringFormatter) String(results []Result) string {
 	total := Result{Author: "all"}
