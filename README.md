@@ -2,7 +2,7 @@
 
 Estimates hours and days spent by all developers on a git repository.
 
-```shell script
+```
 git-estimate -repo="..\flamel"
 
 commits by luigi.tanzini@decodica.com
@@ -26,6 +26,7 @@ commits by dev5
 overall 40.58 days (324.66 hours)
 ```
 
+The code is written in plain go and uses [go-git](https://github.com/src-d/go-git) to read the repo's commits.
 
 ## Install
 
@@ -37,13 +38,13 @@ go build git-estimate
 
 ## Usage
 At a minimum run:
-```shell script
+```
 git-estimate -repo=/path/to/repo
 ```
 this will use default settings to compute the time spent on the repo at the specified path.
 
-```shell script
-git-estimate -h                                                                                                                                                        Usage of D:\repositories\git-estimate\git-estimate.exe:
+```
+git-estimate -h
   -baseline float
         baseline value for session estimate (default 2)
   -estimate string
@@ -61,7 +62,7 @@ You can also specify the result to be output in JSON format, should you need to 
 git-estimate -repo=/path/to/repo -json
 ```
 will output:
-```json
+```json5
 { 
    "developers":[ 
       { 
@@ -101,7 +102,6 @@ will output:
       "days":40.58201388888889
    }
 }
-
 ```
 
 ## Estimates
