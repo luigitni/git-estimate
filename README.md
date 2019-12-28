@@ -44,14 +44,15 @@ git-estimate -repo=/path/to/repo
 this will use default settings to compute the time spent on the repo at the specified path.
 
 ```
-git-estimate -h
-  -baseline float
+-baseline float
         baseline value for session estimate (default 2)
-  -estimate string
+-estimate string
         estimation method. Accepted values are "session" and "day". (default "session")
-  -json
+-from string
+        if provided computation starts from the given date and time. Format is yyyy-mm-ddThh-ii
+-json
         if true will output estimates in JSON format
-  -repo string
+-repo string
         git repository path. If no flag is specified the current folder is assumed (default ".")
 ```
 
@@ -130,3 +131,8 @@ Please use *go fmt* before a pull request.
 #### Inspiration
 
 The software was inspired by [git-hours](https://github.com/kimmobrunfeldt/git-hour). I wasn't able to find anything similar which required less tools to get started so I decided to hack together a quick software that would be as simple and straight to the point.
+
+
+## License
+
+The software is released under the [MIT](https://github.com/luigitni/git-estimate/blob/master/LICENSE.txt) license.

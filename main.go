@@ -16,6 +16,8 @@ const (
 	estDay     = "day"
 )
 
+const timeArgsLayout = "2006-01-02T15-04"
+
 func main() {
 	path := flag.String("repo", ".", "git repository path. If no flag is specified the current folder is assumed")
 
@@ -25,6 +27,8 @@ func main() {
 	json := flag.Bool("json", false, "if true will output estimates in JSON format")
 
 	baseline := flag.Float64("baseline", 2.0, "baseline value for session estimate")
+
+	from := flag.String("from", "", "if provided computation starts from the given date and time. Format is yyyy-mm-ddThh-ii")
 
 	flag.Parse()
 
@@ -47,6 +51,16 @@ func main() {
 	}
 
 	// get the commit history
+	var start time.Time
+	if *from != "" {
+		// parse the string
+		start, err = time.Parse(timeArgsLayout, *from)
+		if err != nil {
+			fmt.Printf("unable to parse 'from' %s given. %s", *from, err.Error())
+			os.Exit(1)
+		}
+	}
+
 	iter, err := repo.Log(&git.LogOptions{All: true, Order: git.LogOrderCommitterTime})
 	if err != nil {
 		fmt.Printf("error reading log of repository: %s", err.Error())
@@ -60,11 +74,17 @@ func main() {
 	// first group commits by authors, then for each author count the working days
 	if err := iter.ForEach(func(commit *object.Commit) error {
 
+		when := commit.Author.When
+		if !start.IsZero() && when.Before(start) {
+			return nil
+		}
+
 		sl, ok := byAuthors[commit.Author.Email]
 		if !ok {
 			sl = make([]time.Time, 0)
 		}
-		sl = append(sl, commit.Author.When)
+
+		sl = append(sl, when)
 		byAuthors[commit.Author.Email] = sl
 
 		return nil
