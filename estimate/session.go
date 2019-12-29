@@ -33,10 +33,9 @@ func (ws WorkingSession) Estimate(byAuthors map[string][]time.Time) []Result {
 			next = t
 		}
 
-		// we have a single commit from the author: add the default blunt estimate
-		if len(v) == 1 {
-			r.Hours += (time.Duration(ws.Baseline) * time.Hour).Hours()
-		}
+		// add the last/first padding to the commit
+		r.Hours += (time.Duration(ws.Baseline) * time.Hour).Hours()
+
 
 		r.Days = r.Hours / 8.0
 		c++

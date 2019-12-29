@@ -17,7 +17,6 @@ func (d DayEstimate) Estimate(byAuthors map[string][]time.Time) []Result {
 		for _, t := range v {
 			if prev.IsZero() {
 				prev = t
-				r.Days += 1.0
 				continue
 			}
 			if prev.YearDay() != t.YearDay() {
@@ -25,6 +24,7 @@ func (d DayEstimate) Estimate(byAuthors map[string][]time.Time) []Result {
 			}
 			prev = t
 		}
+		r.Days += 1.0
 		r.Hours = r.Days * 8.0
 		c++
 	}
