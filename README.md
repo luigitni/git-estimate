@@ -73,44 +73,44 @@ git-estimate -repo=/path/to/repo -json
 will output:
 
 ```json5
-{
-  developers: [
-    {
-      author: 'dev1@decodica.com',
-      hours: 223.58805555555554,
-      days: 27.948506944444443,
-    },
-    {
-      author: 'luigi.tanzini@decodica.com',
-      hours: 2,
-      days: 0.25,
-    },
-    {
-      author: 'dev2@decodica.com',
-      hours: 4.006111111111111,
-      days: 0.5007638888888889,
-    },
-    {
-      author: 'dev3@decodica.com',
-      hours: 11.831944444444444,
-      days: 1.4789930555555555,
-    },
-    {
-      author: 'dev4@decodica.com',
-      hours: 2,
-      days: 0.25,
-    },
-    {
-      author: 'dev5@decodica.com',
-      hours: 81.23,
-      days: 10.15375,
-    },
-  ],
-  overall: {
-    author: 'all',
-    hours: 324.6561111111111,
-    days: 40.58201388888889,
-  },
+{ 
+   "developers":[ 
+      { 
+         "author":"dev1@decodica.com",
+         "hours":223.58805555555554,
+         "days":27.948506944444443
+      },
+      { 
+         "author":"luigi.tanzini@decodica.com",
+         "hours":2,
+         "days":0.25
+      },
+      { 
+         "author":"dev2@decodica.com",
+         "hours":4.006111111111111,
+         "days":0.5007638888888889
+      },
+      { 
+         "author":"dev3@decodica.com",
+         "hours":11.831944444444444,
+         "days":1.4789930555555555
+      },
+      { 
+         "author":"dev4@decodica.com",
+         "hours":2,
+         "days":0.25
+      },
+      { 
+         "author":"dev5@decodica.com",
+         "hours":81.23,
+         "days":10.15375
+      }
+   ],
+   "overall":{ 
+      "author":"all",
+      "hours":324.6561111111111,
+      "days":40.58201388888889
+   }
 }
 ```
 
@@ -125,7 +125,7 @@ It assumes the following:
 
 - A "day" output is a working day made of 8 hours.
 - If more than 8 hours have passed between a commit and the next one, the former was the last commit of the session.
-- The _first_ commit of each working session took 2 hours of work. You can configure this padding using the `baseline` flag when running _git-estimate_
+- The *first* commit of each working session took 2 hours of work. You can configure this padding using the ```baseline``` flag when running *git-estimate*
 
 #### Working Day
 
@@ -140,7 +140,7 @@ Feel free to contribute to the project however you want.
 
 The code should make it easy to add estimation methods and/or output formatter should you need different format or require additional estimation methods.
 
-Please use _go fmt_ before a pull request.
+Please use *go fmt* before a pull request.
 
 #### Inspiration
 
