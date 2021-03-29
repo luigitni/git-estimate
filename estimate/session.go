@@ -1,6 +1,8 @@
 package estimate
 
 import (
+	"fmt"
+	"strings"
 	"time"
 )
 
@@ -13,9 +15,14 @@ type WorkingSession struct {
 func (ws WorkingSession) Estimate(byAuthors map[string][]time.Time) []Result {
 	results := make([]Result, len(byAuthors))
 	c := 0
-	for k, _ := range byAuthors {
+	for k := range byAuthors {
 		r := &results[c]
 		r.Author = k
+		if strings.Count(k, "@") > 1 {
+			p := strings.Split(k, "@")
+			r.Author = fmt.Sprintf("%s@%s", p[0], p[1])
+			r.Issue = p[2]
+		}
 		next := time.Time{}
 		v := byAuthors[k]
 		for _, t := range v {
@@ -35,7 +42,6 @@ func (ws WorkingSession) Estimate(byAuthors map[string][]time.Time) []Result {
 
 		// add the last/first padding to the commit
 		r.Hours += (time.Duration(ws.Baseline) * time.Hour).Hours()
-
 
 		r.Days = r.Hours / 8.0
 		c++

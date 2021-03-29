@@ -7,7 +7,9 @@ import (
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
 	"os"
+	"regexp"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -25,6 +27,8 @@ func main() {
 		fmt.Sprintf("estimation method. Accepted values are %q and %q.", estSession, estDay))
 
 	json := flag.Bool("json", false, "if true will output estimates in JSON format")
+
+	jira := flag.Bool("jira", false, "if true will group estimates by tagged Jira issue")
 
 	baseline := flag.Float64("baseline", 2.0, "baseline value for session estimate")
 
@@ -71,6 +75,11 @@ func main() {
 
 	byAuthors := make(map[string][]time.Time)
 
+	// Jira smart commit format
+	// <ignored text> <ISSUE_KEY> <ignored text> #<COMMAND> <optional COMMAND_ARGUMENTS>
+	var re *regexp.Regexp
+	re = regexp.MustCompile("(?:[\\w:]+ )?([a-zA-Z]\\w+-\\d+)\\D")
+
 	// first group commits by authors, then for each author count the working days
 	if err := iter.ForEach(func(commit *object.Commit) error {
 
@@ -79,13 +88,26 @@ func main() {
 			return nil
 		}
 
-		sl, ok := byAuthors[commit.Author.Email]
+		var builder strings.Builder
+		builder.WriteString(commit.Author.Email)
+
+		if *jira {
+			matches := re.FindStringSubmatch(commit.Message)
+			if len(matches) > 1 {
+				builder.WriteString("@")
+				builder.WriteString(matches[1])
+			}
+		}
+
+		group := builder.String()
+
+		sl, ok := byAuthors[group]
 		if !ok {
 			sl = make([]time.Time, 0)
 		}
 
 		sl = append(sl, when)
-		byAuthors[commit.Author.Email] = sl
+		byAuthors[group] = sl
 
 		return nil
 	}); err != nil {
@@ -94,7 +116,7 @@ func main() {
 	}
 
 	// sort each slice of commits by date
-	for k, _ := range byAuthors {
+	for k := range byAuthors {
 		commits := byAuthors[k]
 		sort.Slice(commits, func(i, j int) bool {
 			return commits[i].After(commits[j])
