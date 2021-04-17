@@ -10,7 +10,7 @@ import (
 
 type Result struct {
 	Author string  `json:"author"`
-	Issue  string  `json:"issue,omitempty"`
+	Group  string  `json:"group,omitempty"`
 	Hours  float64 `json:"hours"`
 	Days   float64 `json:"days"`
 }
@@ -56,8 +56,8 @@ func (f StringFormatter) String(results []Result) string {
 	var builder strings.Builder
 	for _, res := range results {
 		builder.WriteString(fmt.Sprintf("commits by %s", res.Author))
-		if res.Issue != "" {
-			builder.WriteString(fmt.Sprintf(" on %s", res.Issue))
+		if res.Group != "" {
+			builder.WriteString(fmt.Sprintf(" on %s", res.Group))
 		}
 		builder.WriteString(fmt.Sprintf("\n=== %.2f days (%.2f hours)", res.Days, res.Hours))
 		builder.WriteString("\n\n")

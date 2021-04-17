@@ -17,7 +17,7 @@ func (d DayEstimate) Estimate(byAuthors map[string][]time.Time) []Result {
 		if strings.Count(k, "@") > 1 {
 			p := strings.Split(k, "@")
 			r.Author = fmt.Sprintf("%s@%s", p[0], p[1])
-			r.Issue = p[2]
+			r.Group = p[2]
 		}
 		prev := time.Time{}
 		v := byAuthors[k]

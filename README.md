@@ -58,8 +58,13 @@ this will use default settings to compute the time spent on the repo at the spec
         if true will output estimates in JSON format
 -repo string
         git repository path. If no flag is specified the current folder is assumed (default ".")
--jira
-        if true will group estimates by tagged Jira issue
+-group
+        group estimates based on comment message content using a predefined or custom pattern. Custom patterns should identify exactly 1 capturing group. See https://github.com/google/re2/wiki/Syntax for syntax.
+        Predefined patterns available:
+    
+                jira - Captures the first Jira issue key based on the smart commit format (https://support.atlassian.com/bitbucket-cloud/docs/use-smart-commits/)
+                type - Captures the type component of conventional commit messages (https://www.conventionalcommits.org/en/v1.0.0/)
+                scope - Captures the scope component of conventional commit messages (https://www.conventionalcommits.org/en/v1.0.0/)
 ```
 
 ### Output
@@ -113,6 +118,14 @@ will output:
    }
 }
 ```
+
+### Grouping
+
+By default, commits are grouped by author email address. This can be further subgrouped based on content matching in the commit message. Specify a predefined pattern after the `-group` flag or provide a custom [regex pattern](https://github.com/google/re2/wiki/Syntax) with exactly 1 capture group.
+
+* `-group jira` - Captures the first Jira issue key based on the [smart commit format](https://support.atlassian.com/bitbucket-cloud/docs/use-smart-commits/)
+* `-group type` - Captures the type component of [conventional commit messages](https://www.conventionalcommits.org/en/v1.0.0/)
+* `-group scope` - Captures the scope component of [conventional commit messages](https://www.conventionalcommits.org/en/v1.0.0/)
 
 ## Estimates
 
