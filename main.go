@@ -64,23 +64,31 @@ func main() {
 	}
 
 	var re *regexp.Regexp
+	groupSet := false
+	flag.Visit(func(f *flag.Flag) {
+		if f.Name == "group" {
+			groupSet = true
+		}
+	})
 
-	switch *group {
-	case jiraPattern:
-		re = regexp.MustCompile("(?:[\\w:]+ )?([a-zA-Z]\\w+-\\d+)\\D")
-	case typePattern:
-		re = regexp.MustCompile("^([a-zA-Z!]+)[\\(:]")
-	case scopePattern:
-		re = regexp.MustCompile("^[^\\()]+\\(([^\\)]+)\\)")
-	case "":
-		fmt.Printf("Invalid grouping pattern. Provide a custom pattern or specify a valid preset pattern: %q", jiraPattern)
-		os.Exit(1)
-	default:
-		re = regexp.MustCompile(*group)
-		caps := re.NumSubexp()
-		if caps == 0 || caps > 1 {
-			fmt.Printf("Invalid grouping pattern. Pattern must specify exactly 1 capture group")
+	if groupSet {
+		switch *group {
+		case jiraPattern:
+			re = regexp.MustCompile("(?:[\\w:]+ )?([a-zA-Z]\\w+-\\d+)\\D")
+		case typePattern:
+			re = regexp.MustCompile("^([a-zA-Z!]+)[\\(:]")
+		case scopePattern:
+			re = regexp.MustCompile("^[^\\()]+\\(([^\\)]+)\\)")
+		case "":
+			fmt.Printf("Invalid grouping pattern. Provide a custom pattern or specify a valid preset pattern: %q", jiraPattern)
 			os.Exit(1)
+		default:
+			re = regexp.MustCompile(*group)
+			caps := re.NumSubexp()
+			if caps == 0 || caps > 1 {
+				fmt.Printf("Invalid grouping pattern. Pattern must specify exactly 1 capture group")
+				os.Exit(1)
+			}
 		}
 	}
 
