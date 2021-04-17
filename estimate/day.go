@@ -1,6 +1,8 @@
 package estimate
 
 import (
+	"fmt"
+	"strings"
 	"time"
 )
 
@@ -9,9 +11,14 @@ type DayEstimate struct{}
 func (d DayEstimate) Estimate(byAuthors map[string][]time.Time) []Result {
 	results := make([]Result, len(byAuthors))
 	c := 0
-	for k, _ := range byAuthors {
+	for k := range byAuthors {
 		r := &results[c]
 		r.Author = k
+		if strings.Count(k, "@") > 1 {
+			p := strings.Split(k, "@")
+			r.Author = fmt.Sprintf("%s@%s", p[0], p[1])
+			r.Group = p[2]
+		}
 		prev := time.Time{}
 		v := byAuthors[k]
 		for _, t := range v {

@@ -31,16 +31,20 @@ The code is written in plain go and uses [go-git](https://github.com/src-d/go-gi
 ## Install
 
 Clone the repository then simply build git-estimate from source using the goo tools:
+
 ```shell script
 cd path/to/your/cloned/repo
 go build git-estimate
 ```
 
 ## Usage
+
 At a minimum run:
+
 ```
 git-estimate -repo=/path/to/repo
 ```
+
 this will use default settings to compute the time spent on the repo at the specified path.
 
 ```
@@ -54,15 +58,25 @@ this will use default settings to compute the time spent on the repo at the spec
         if true will output estimates in JSON format
 -repo string
         git repository path. If no flag is specified the current folder is assumed (default ".")
+-group
+        group estimates based on comment message content using a predefined or custom pattern. Custom patterns should identify exactly 1 capturing group. See https://github.com/google/re2/wiki/Syntax for syntax.
+        Predefined patterns available:
+    
+                jira - Captures the first Jira issue key based on the smart commit format (https://support.atlassian.com/bitbucket-cloud/docs/use-smart-commits/)
+                type - Captures the type component of conventional commit messages (https://www.conventionalcommits.org/en/v1.0.0/)
+                scope - Captures the scope component of conventional commit messages (https://www.conventionalcommits.org/en/v1.0.0/)
 ```
 
 ### Output
 
 You can also specify the result to be output in JSON format, should you need to use the program in a pipeline.
+
 ```shell script
 git-estimate -repo=/path/to/repo -json
 ```
+
 will output:
+
 ```json5
 { 
    "developers":[ 
@@ -105,18 +119,31 @@ will output:
 }
 ```
 
+### Grouping
+
+By default, commits are grouped by author email address. This can be further subgrouped based on content matching in the commit message. Specify a predefined pattern after the `-group` flag or provide a custom [regex pattern](https://github.com/google/re2/wiki/Syntax) with exactly 1 capture group.
+
+* `-group jira` - Captures the first Jira issue key based on the [smart commit format](https://support.atlassian.com/bitbucket-cloud/docs/use-smart-commits/)
+* `-group type` - Captures the type component of [conventional commit messages](https://www.conventionalcommits.org/en/v1.0.0/)
+* `-group scope` - Captures the scope component of [conventional commit messages](https://www.conventionalcommits.org/en/v1.0.0/)
+
 ## Estimates
+
 Currently the software supports two simple methods of estimation:
 
 #### Working Session
+
 This estimation is perhaps the most accurate.
 It assumes the following:
+
 - A "day" output is a working day made of 8 hours.
 - If more than 8 hours have passed between a commit and the next one, the former was the last commit of the session.
 - The *first* commit of each working session took 2 hours of work. You can configure this padding using the ```baseline``` flag when running *git-estimate*
-  
+
 #### Working Day
+
 This estimation assumes the following:
+
 - If a commit has been done during the day, that day counts toward the total
 - A day is made of 8 working hours
 
@@ -131,7 +158,6 @@ Please use *go fmt* before a pull request.
 #### Inspiration
 
 The software was inspired by [git-hours](https://github.com/kimmobrunfeldt/git-hour). I wasn't able to find anything similar which required less tools to get started so I decided to hack together a quick software that would be as simple and straight to the point.
-
 
 ## License
 
